@@ -1,0 +1,38 @@
+<?php
+/**
+ * @file
+ * Code for Dash.
+ * @author [cjwest]
+ */
+
+// Make sure this is loaded.
+
+require_once "includes/vendor/autoload.php";
+require_once "includes/autoload.php";
+
+include_once 'dash.features.inc';
+require_once "dash.pages.inc";
+
+/**
+ * Implements hook_menu().
+ */
+function dash_menu() {
+
+  // Overview page.
+  $items['admin/config/dash'] = array(
+    'title' => 'Dashboard',
+    'page callback' => 'dash_admin_config',
+    'access arguments' => array('administer dash'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  // Connect page.
+  $items['admin/config/dash/connect'] = array(
+    'title' => 'Connect',
+    'page callback' => 'dash_admin_config_connect',
+    'access arguments' => array('administer dash'),
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => -10,
+  );
+  return $items;
+}
