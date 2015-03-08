@@ -5,6 +5,7 @@
  */
 
 use Dash\DashClient;
+require_once 'includes/entity.inc';
 
 function dash_admin_config() {
   $output = array();
@@ -39,8 +40,6 @@ function dash_admin_config_connect() {
 
 
 
-  $result = ' ';
-  $error = false;
 
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
@@ -49,34 +48,45 @@ function dash_admin_config_connect() {
 
   $result = $query->execute();
 
-  $aids = array();
-  foreach($result['artwork'] as $record) {
-    $aids[] = $record->aid;
+  if (isset($result['node'])) {
+    $dash_nids = array_keys($result['node']);
+    $dash_items = entity_load('node', $dash_nids);
   }
-  $artworks = entity_load('artwork', $aids);
 
-  $client = DashClient::factory(array(
-    'base_url'        => 'https://api.github.com/user',
-    'consumer_key'    => 'xxxxx',
-    'consumer_secret' => 'xxxxx',
-  ));
-  try {
-      $res = $client->get("https://api.github.com/user", ['auth' =>  ['xxxxx', 'xxxxx']]);
-    } catch (\Exception $e) {
-      $result = $result . "<p>Caught Exception: " . $e->getMessage() . '</p>';
-      $error = true;
+  $content = ' ';
+  $error = false;
+
+  foreach ($dash_items as $item) {
+     dsm ($item);
+     $content = $content . '<p>URL: ' . $item->field_dash_item_url['und']['0']['url'] . '</p>';
+     $content = $content . '<p>User: ' . $item->field_dash_item_user['und']['0']['safe_value'] . '</p>';
+     $content = $content . '<p>Password: ' . $item->field_dash_item_password['und']['0']['safe_value'] . '</p>';
+
+
+     $client = DashClient::factory(array(
+      'base_url'        => $item->field_dash_item_url['und']['0']['url'],
+      'consumer_key'    => $item->field_dash_item_user['und']['0']['safe_value'],
+      'consumer_secret' => $item->field_dash_item_password['und']['0']['safe_value'],
+    ));
+    try {
+      $res = $client->get($item->field_dash_item_url['und']['0']['url'],
+        ['auth' =>  [$item->field_dash_item_user['und']['0']['safe_value'],
+          $item->field_dash_item_password['und']['0']['safe_value']]]);
+      } catch (\Exception $e) {
+        $content = $result . "<p>Caught Exception: " . $e->getMessage() . '</p>';
+        $error = true;
+      }
+      if ($error == false) {
+        $content = $content . "<p>Status Code: " . $res->getStatusCode() . '</p>';
+        $content = $content . '<p>Header: ' . $res->getHeader('content-type') . '</p>';
+        $content = $content . '<p>Body: ' . $res->getBody() . '</p>';
+
+        var_export($res->json());
+      }
     }
-    if ($error == false) {
-      $result = $result . "<p>Status Code: " . $res->getStatusCode() . '</p>';
-      $result = $result . '<p>Header: ' . $res->getHeader('content-type') . '</p>';
-      $result = $result . '<p>Body: ' . $res->getBody() . '</p>';
 
-      var_export($res->json());
-
-    }
-
-  $result = "<p>" . t("Client Get.") . $result . "</p>";
-  $output['content']['body']['#markup'] = $result;
+  $content = "<p>" . t("Client Get.") . $content . "</p>";
+  $output['content']['body']['#markup'] = $content;
 
   return $output;
 }
