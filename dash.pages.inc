@@ -5,6 +5,8 @@
  */
 
 use Dash\DashClient;
+use Dash\DashBoardController;
+use Dash\DashItem;
 require_once 'includes/entity.inc';
 
 function dash_admin_config() {
@@ -38,20 +40,12 @@ function dash_admin_config_connect() {
   //$form = drupal_get_form('dash_forms_connect_form');
   //$output['content']['config_form'] = $form;
 
+//  $dash_items = dash_getAllDashItems();
+  $dashboard_controller = new DashBoardController('node');
+//  $dash_item = new DashItem(array(), 'dashboard_item');
+//  $dash_items = DashBoardController::getAllDashItems();
+  $dash_items = $dashboard_controller->getAllDashItems();
 
-
-
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'dashboard_item')
-    ->propertyCondition('status', NODE_PUBLISHED);
-
-  $result = $query->execute();
-
-  if (isset($result['node'])) {
-    $dash_nids = array_keys($result['node']);
-    $dash_items = entity_load('node', $dash_nids);
-  }
 
   $content = ' ';
   $error = false;

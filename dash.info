@@ -6,6 +6,7 @@ project = dash
 dependencies[] = features
 dependencies[] = link
 dependencies[] = text
+dependencies[] = entity
 features[features_api][] = api:2
 features[field_base][] = field_dash_item_password
 features[field_base][] = field_dash_item_url

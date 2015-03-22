@@ -36,3 +36,19 @@ function dash_menu() {
   );
   return $items;
 }
+
+function dash_getAllDashItems() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'dashboard_item')
+    ->propertyCondition('status', NODE_PUBLISHED);
+
+  $result = $query->execute();
+
+
+  if (isset($result['node'])) {
+    $dash_nids = array_keys($result['node']);
+    $dash_items = entity_load('node', $dash_nids);
+  }
+  return $dash_items;
+}
