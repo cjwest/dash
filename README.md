@@ -1,6 +1,6 @@
 #Dash
 
-Dashboard is an Extensible module builds on some great work. This module provides an interface for administrators to monitor and act upon events.
+Dash builds on some great work. This module provides an interface for administrators to monitor and act upon events.
 
 ## What is Dash?
 
