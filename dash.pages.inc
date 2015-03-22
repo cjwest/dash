@@ -44,8 +44,7 @@ function dash_admin_config_connect() {
   $dashboard_controller = new DashBoardController('node');
 //  $dash_item = new DashItem(array(), 'dashboard_item');
 //  $dash_items = DashBoardController::getAllDashItems();
-  $dash_items = $dashboard_controller->getAllDashItems();
-
+  $dash_items = $dashboard_controller->load();
 
   $content = ' ';
   $error = false;
@@ -71,10 +70,16 @@ function dash_admin_config_connect() {
         $error = true;
       }
       if ($error == false) {
+
         $content = $content . "<p>Status Code: " . $res->getStatusCode() . '</p>';
         $content = $content . '<p>Header: ' . $res->getHeader('content-type') . '</p>';
         $content = $content . '<p>Body: ' . $res->getBody() . '</p>';
+        $wrapper = entity_metadata_wrapper('dash_item', $item);
+        $wrapper->body = 'helllo';
 
+//        $item->body[0] = "hello";
+//        $item->save();
+//        $dashboard_controller->save($item);
         var_export($res->json());
       }
     }

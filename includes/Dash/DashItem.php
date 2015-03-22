@@ -13,7 +13,7 @@ require_once DRUPAL_ROOT . '/includes/entity.inc';
 
 class DashItem extends \Entity {
 
-  public function __construct(array $values = array(), $entityType = 'node') {
+  public function __construct(array $values = array(), $entityType = 'dash_item') {
     parent::__construct($values, $entityType);
 
     // Expose settings for easier get access.
