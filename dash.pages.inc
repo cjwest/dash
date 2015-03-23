@@ -66,7 +66,7 @@ function dash_admin_config_connect() {
         ['auth' =>  [$item->field_dash_item_user['und']['0']['safe_value'],
           $item->field_dash_item_password['und']['0']['safe_value']]]);
       } catch (\Exception $e) {
-        $content = $result . "<p>Caught Exception: " . $e->getMessage() . '</p>';
+        $content = $content . "<p>Caught Exception: " . $e->getMessage() . '</p>';
         $error = true;
       }
       if ($error == false) {
@@ -74,12 +74,12 @@ function dash_admin_config_connect() {
         $content = $content . "<p>Status Code: " . $res->getStatusCode() . '</p>';
         $content = $content . '<p>Header: ' . $res->getHeader('content-type') . '</p>';
         $content = $content . '<p>Body: ' . $res->getBody() . '</p>';
-        $wrapper = entity_metadata_wrapper('dash_item', $item);
-        $wrapper->body = 'helllo';
+//        $wrapper = entity_metadata_wrapper('dashboard_item', $item);
+//        $wrapper->body = 'helllo';
 
-//        $item->body[0] = "hello";
-//        $item->save();
-//        $dashboard_controller->save($item);
+        $item->body[0] = "hello";
+ //       $item->save();
+       $dashboard_controller->save($item);
         var_export($res->json());
       }
     }

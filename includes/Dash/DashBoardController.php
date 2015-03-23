@@ -52,8 +52,10 @@ class DashBoardController extends \EntityAPIController {
    *   this method.
    */
   public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    $wrapper = entity_metadata_wrapper('dashboard_item', $entity);
     return parent::buildContent($entity, $view_mode, $langcode, $content);
   }
+
     /**
    * Overridden.
    * @see EntityAPIController::save($entity)
@@ -62,7 +64,8 @@ class DashBoardController extends \EntityAPIController {
 
     return parent::save($entity);
   }
-  /**
+
+    /**
    * Overridden.
    * @see EntityAPIController::load($ids, $conditions)
    *
