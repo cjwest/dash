@@ -9,23 +9,24 @@
  */
 function dash_install() {
   // Set default variables.
+  /*
   variable_set('dash_gmap', 1);
   variable_set('dash_default_center_lat', 42.91455);
   variable_set('dash_default_center_long', -75.569851);
   variable_set('dash_default_gmap_zoom', 8);
-
+*/
   // Get localization function for installation as t() may be unavailable.
   $t = get_t();
 
   // Give user feedback.
-  drupal_set_message($t('Wind Farms variables created.'));
+  drupal_set_message($t('Installing Dash.'));
 
   // Content type definition.
   $content_type = array(
     'type' => 'dash_item',
     'name' => $t('Dash item'),
-    'description' => $t('A Wind Farm, including location.'),
-    'title_label' => $t('Facility Name'),
+    'description' => $t('An item on a dashboard.'),
+    'title_label' => $t('Dash Item'),
     'base' => 'node_content',
     'custom' => TRUE,
   );
@@ -42,38 +43,47 @@ function dash_install() {
   // Create fields.
   $fields = array();
 
-  $fields['dash_unit_count'] = array(
-    'field_name' => 'dash_unit_count',
-    'type' => 'number_integer',
-    // Optional.
-    'cardinality' => 1,
-    'settings' => array(
-      'max_length' => 5,
-    ),
-  );
-
-  $fields['dash_latitude'] = array(
-    'field_name' => 'dash_latitude',
-    'type' => 'number_float',
-    'settings' => array(
-      'max_length' => 20,
-    ),
-  );
-
-  $fields['dash_longitude'] = array(
-    'field_name' => 'dash_longitude',
-    'type' => 'number_float',
-    'settings' => array(
-      'max_length' => 20,
-    ),
-  );
-
-  $fields['dash_turbine_manufacturer'] = array(
-    'field_name' => 'dash_turbine_manufacturer',
+  $fields['dash_item_username'] = array(
+    'field_name' => 'dash_item_username',
     'type' => 'text',
     'settings' => array(
       'max_length' => 60,
     ),
+  );
+
+  $fields['dash_item_userauth'] = array(
+    'field_name' => 'dash_item_userauth',
+    'type' => 'text',
+    'settings' => array(
+      'max_length' => 60,
+    ),
+  );
+  $fields['dash_item_path'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'dash_item_path',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'link',
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'rel' => '',
+        'target' => 'default',
+      ),
+      'display' => array(
+        'url_cutoff' => 180,
+      ),
+      'enable_tokens' => 1,
+      'title' => 'optional',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+    ),
+    'translatable' => 0,
+    'type' => 'link_field',
   );
 
   foreach ($fields as $field) {
@@ -83,57 +93,10 @@ function dash_install() {
   // Create Field Instances.
   $instances = array();
 
-  $instances['dash_unit_count'] = array(
-    'field_name' => 'dash_unit_count',
-    'label' => $t('Number of Units'),
-    'description' => $t('Number of individual units at a given Facility'),
-    'widget' => array(
-      'type' => 'text_textfield',
-    ),
-    'required' => TRUE,
-    'settings' => array(
-      'text_processing' => 0,
-    ),
-  );
-
-  $instances['dash_latitude'] = array(
-    'field_name' => 'dash_latitude',
-    'label' => $t('Latitude'),
-    'description' => $t('Signed degrees format (DDD.dddd)'),
-    'widget' => array(
-      'type' => 'text_textfield',
-    ),
-    'settings' => array(
-      'text_processing' => 0,
-    ),
-    'display' => array(
-      'default' => array(
-        'type' => 'hidden',
-      ),
-    ),
-  );
-
-  $instances['dash_longitude'] = array(
-    'field_name' => 'dash_longitude',
-    'label' => $t('Longitude'),
-    'description' => $t('Signed degrees format (DDD.dddd)'),
-    'widget' => array(
-      'type' => 'text_textfield',
-    ),
-    'settings' => array(
-      'text_processing' => 0,
-    ),
-    'display' => array(
-      'default' => array(
-        'type' => 'hidden',
-      ),
-    ),
-  );
-
-  $instances['dash_turbine_manufacturer'] = array(
-    'field_name' => 'dash_turbine_manufacturer',
-    'label' => $t('Turbine Manufacturer'),
-    'description' => $t('The name of the turbine manufacturer'),
+  $instances['dash_item_username'] = array(
+    'field_name' => 'dash_item_username',
+    'label' => $t('User name'),
+    'description' => $t('The username of user accessing the system'),
     'widget' => array(
       'type' => 'text_textfield',
     ),
@@ -144,9 +107,81 @@ function dash_install() {
     ),
   );
 
+
+  $instances['dash_item_userauth'] = array(
+    'field_name' => 'dash_item_userauth',
+    'label' => $t('User authentication info'),
+    'description' => $t('The authentication info for the user'),
+    'widget' => array(
+      'type' => 'text_textfield',
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+      ),
+    ),
+  );
+
+
+  $instances['dash_item_path'] = array(
+    'field_name' => 'dash_item_path',
+    'bundle' => 'dash_item',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'label' => 'URL',
+    'required' => 0,
+    'settings' => array(
+      'absolute_url' => 1,
+      'attributes' => array(
+        'class' => '',
+        'configurable_class' => 0,
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'rel_remove' => 'default',
+      'title' => 'none',
+      'title_label_use_field_label' => 0,
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(),
+      'type' => 'link_field',
+      'weight' => 3,
+    ),
+  );
+
   foreach ($instances as $instance) {
     $instance['entity_type'] = 'node';
-    $instance['bundle'] = 'dash';
+    $instance['bundle'] = 'dash_item';
     field_create_instance($instance);
   }
 }
@@ -155,21 +190,30 @@ function dash_install() {
  * Implements hook_uninstall().
  */
 function dash_uninstall() {
+  $t = get_t();
+  drupal_set_message($t('Uninstalling Dash...'));
+  _dash_item_uninstall();
+  _dashboard_item_uninstall();
+}
+
+function _dash_item_uninstall() {
+
+  /*
   // Delete variables.
   variable_del('dash_gmap');
   variable_del('dash_default_center_lat');
   variable_del('dash_default_center_long');
   variable_del('dash_default_gmap_zoom');
-
+*/
   // Inform the user of the removal.
   $t = get_t();
-  drupal_set_message($t('Wind Farms variables removed.'));
+  drupal_set_message($t('Uninstalling Dash Items...'));
 
   // Get all node IDs with dash content type.
   $sql_query  = 'SELECT nid ';
   $sql_query .= 'FROM {node} ';
   $sql_query .= 'WHERE {node}.type = :type ';
-  $result = db_query($sql_query, array(':type' => 'dash'));
+  $result = db_query($sql_query, array(':type' => 'dash_item'));
 
   $nids = array();
   foreach ($result as $row) {
@@ -178,19 +222,55 @@ function dash_uninstall() {
 
   // Delete all dash content.
   node_delete_multiple($nids);
-  drupal_set_message($t('Dash content removed.'));
+  drupal_set_message($t('Dash item content removed.'));
 
   // Remove all fields and field instances.
-  foreach (field_info_instances('node', 'dash') as $field_name => $instance) {
+  foreach (field_info_instances('node', 'dash_item') as $field_name => $instance) {
     field_delete_field($field_name);
     field_delete_instance($instance);
   }
-  drupal_set_message($t('Dash field and field instances removed.'));
+  drupal_set_message($t('Dash item field and field instances removed.'));
 
   // Delete the content type.
-  node_type_delete('dash');
-  drupal_set_message($t('Wind Farm Content Type removed.'));
+  node_type_delete('dash_item');
+  drupal_set_message($t('Dash item Content Type removed.'));
 
   // Clean up deleted fields.
   field_purge_batch(1000);
+}
+
+function _dashboard_item_uninstall(){
+  $t = get_t();
+  drupal_set_message($t('Uninstalling Dashboard Items...'));
+
+  // Get all node IDs with dash content type.
+  $sql_query  = 'SELECT nid ';
+  $sql_query .= 'FROM {node} ';
+  $sql_query .= 'WHERE {node}.type = :type ';
+  $result = db_query($sql_query, array(':type' => 'dashboard_item'));
+
+  $nids = array();
+  foreach ($result as $row) {
+    $nids[] = $row->nid;
+  }
+
+  // Delete all dash content.
+  node_delete_multiple($nids);
+  drupal_set_message($t('Dashboard item content removed.'));
+
+  // Remove all fields and field instances.
+  foreach (field_info_instances('node', 'dashboard_item') as $field_name => $instance) {
+    field_delete_field($field_name);
+    field_delete_instance($instance);
+  }
+  drupal_set_message($t('Dashboard item field and field instances removed.'));
+
+  // Delete the content type.
+  node_type_delete('dash_item');
+  drupal_set_message($t('Dashboard item Content Type removed.'));
+
+  // Clean up deleted fields.
+  field_purge_batch(1000);
+
+
 }

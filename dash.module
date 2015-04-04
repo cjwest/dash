@@ -52,3 +52,25 @@ function dash_getAllDashItems() {
   }
   return $dash_items;
 }
+
+
+/**
+ * Implements hook_form_alter().
+ */
+
+
+function dash_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    case 'dash_item_node_form':{
+      $form['#validate'][] = 'dash_dash_item_node_form_validate';
+      break;
+    }
+  }
+}
+
+/**
+ * Validates Wind Farm content type.
+ */
+function dash_dash_item_node_form_validate($form, &$form_state) {
+  drupal_set_message(t('Dash item validated.'));
+}
