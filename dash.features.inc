@@ -8,6 +8,7 @@
  * Implements hook_node_info().
  */
 function dash_node_info() {
+
   $items = array(
     'dashboard_item' => array(
       'name' => t('Dashboard Item'),

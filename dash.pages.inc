@@ -77,9 +77,22 @@ function dash_admin_config_connect() {
 //        $wrapper = entity_metadata_wrapper('dashboard_item', $item);
 //        $wrapper->body = 'helllo';
 
+//===========
+        $langcode = LANGUAGE_NONE;
+        $item->title = $values['title'];
+        $item->book['link_title'] = $values['title'];
+        $item->revision = 1;
+        $item->log = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $values['title']));
+
+        node_save($item);
+        watchdog('content', 'book: updated %title.', array('%title' => $item->title), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
+
+//===========
+
         $item->body[0] = "hello";
  //       $item->save();
        $dashboard_controller->save($item);
+        node_save($item);
         var_export($res->json());
       }
     }
