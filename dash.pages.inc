@@ -49,6 +49,10 @@ function dash_admin_config_connect() {
   $content = ' ';
   $error = false;
 
+  $dashboard_controller->getStatus($dash_items);
+
+/*
+
   foreach ($dash_items as $item) {
      dsm ($item);
      $content = $content . '<p>URL: ' . $item->field_dash_item_url['und']['0']['url'] . '</p>';
@@ -77,17 +81,7 @@ function dash_admin_config_connect() {
 //        $wrapper = entity_metadata_wrapper('dashboard_item', $item);
 //        $wrapper->body = 'helllo';
 
-/* ===========
-        $langcode = LANGUAGE_NONE;
-        $item->title = $values['title'];
-        $item->book['link_title'] = $values['title'];
-        $item->revision = 1;
-        $item->log = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $values['title']));
 
-        node_save($item);
-        watchdog('content', 'book: updated %title.', array('%title' => $item->title), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
-
-//=========== */
 
         $item->body['und'][0]['value'] = "hello";
  //       $item->save();
@@ -97,9 +91,10 @@ function dash_admin_config_connect() {
         var_export($res->json());
       }
     }
-
+*/
   $content = "<p>" . t("Client Get.") . $content . "</p>";
   $output['content']['body']['#markup'] = $content;
+
 
   return $output;
 }

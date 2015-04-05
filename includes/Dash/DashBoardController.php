@@ -104,9 +104,12 @@ class DashBoardController extends \EntityAPIController {
     return $dash_items;
 
   }
+  public function getStatus ($dash_items) {
+    foreach ($dash_items as $item) {
+      DashItem::getStatus($item);
+    }
+  }
 }
-
-
 
 class DashEntityFieldQuery extends EntityFieldQuery {
   public function __construct() {
