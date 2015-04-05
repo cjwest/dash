@@ -61,7 +61,8 @@ class DashItem extends \Entity {
       $content = $content . '<p>Body: ' . $res->getBody() . '</p>';
 
 
-      $item->body['und'][0]['value'] = DashItem::_parseSirenJson($res->json());
+      $item->body['und'][0]['value'] = $res->getBody();
+      DashItem::_parseSirenJson($res->json());
 
       $node = node_submit($item);
       node_save($item);
@@ -74,8 +75,44 @@ class DashItem extends \Entity {
 
   static private function _parseSirenJson($json){
 
-    var_dump($json[0]['origin']);
+    var_dump($json);
 
+    global $user;
+
+    $values = array(
+      'type' => 'dash_siren',
+      'uid' => $user->uid,
+      'status' => 1,
+    );
+    $entity = entity_create('node', $values);
+    $ewrapper = entity_metadata_wrapper('node', $entity);
+    $ewrapper->title->set('YOUR TITLE');
+
+    $my_body_content = 'A bunch of text about things that interest me';
+    $ewrapper->body->set(array('value' => $my_body_content));
+
+// Setting the value of an entity reference field only requires passing
+// the entity id (e.g., nid) of the entity to which you want to refer
+// The nid 15 here is just an example.
+//    $ref_nid = 15;
+// Note that the entity id (e.g., nid) must be passed as an integer not a
+// string
+//    $ewrapper->field_my_entity_ref->set(intval($ref_nid));
+
+// Entity API cannot set date field values so the 'old' method must
+// be used
+//    $my_date = new DateTime('January 1, 2013');
+//    $entity->field_my_date[LANGUAGE_NONE][0] = array(
+//      'value' => date_format($my_date, 'Y-m-d'),
+//      'timezone' => 'UTC',
+//      'timezone_db' => 'UTC',
+//    );
+
+// Now just save the wrapper and the entity
+// There is some suggestion that the 'true' argument is necessary to
+// the entity save method to circumvent a bug in Entity API. If there is
+// such a bug, it almost certainly will get fixed, so make sure to check.
+    $ewrapper->save();
 
     return $json;
   }

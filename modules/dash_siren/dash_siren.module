@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Dash Siren feature.
+ */
+
+include_once 'dash_siren.features.inc';
