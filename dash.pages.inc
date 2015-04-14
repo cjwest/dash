@@ -42,56 +42,11 @@ function dash_admin_config_connect() {
 
 //  $dash_items = dash_getAllDashItems();
   $dashboard_controller = new DashBoardController('node');
-//  $dash_item = new DashItem(array(), 'dashboard_item');
-//  $dash_items = DashBoardController::getAllDashItems();
   $dash_items = $dashboard_controller->load();
-
-  $content = ' ';
-  $error = false;
-
   $dashboard_controller->getStatus($dash_items);
 
-/*
+  $content = ' ';
 
-  foreach ($dash_items as $item) {
-     dsm ($item);
-     $content = $content . '<p>URL: ' . $item->field_dash_item_url['und']['0']['url'] . '</p>';
-     $content = $content . '<p>User: ' . $item->field_dash_item_user['und']['0']['safe_value'] . '</p>';
-     $content = $content . '<p>Password: ' . $item->field_dash_item_password['und']['0']['safe_value'] . '</p>';
-
-
-     $client = DashClient::factory(array(
-      'base_url'        => $item->field_dash_item_url['und']['0']['url'],
-      'consumer_key'    => $item->field_dash_item_user['und']['0']['safe_value'],
-      'consumer_secret' => $item->field_dash_item_password['und']['0']['safe_value'],
-    ));
-    try {
-      $res = $client->get($item->field_dash_item_url['und']['0']['url'],
-        ['auth' =>  [$item->field_dash_item_user['und']['0']['safe_value'],
-          $item->field_dash_item_password['und']['0']['safe_value']]]);
-      } catch (\Exception $e) {
-        $content = $content . "<p>Caught Exception: " . $e->getMessage() . '</p>';
-        $error = true;
-      }
-      if ($error == false) {
-
-        $content = $content . "<p>Status Code: " . $res->getStatusCode() . '</p>';
-        $content = $content . '<p>Header: ' . $res->getHeader('content-type') . '</p>';
-        $content = $content . '<p>Body: ' . $res->getBody() . '</p>';
-//        $wrapper = entity_metadata_wrapper('dashboard_item', $item);
-//        $wrapper->body = 'helllo';
-
-
-
-        $item->body['und'][0]['value'] = "hello";
- //       $item->save();
-       $dashboard_controller->save($item);
-        $node = node_submit($item);
-        node_save($item);
-        var_export($res->json());
-      }
-    }
-*/
   $content = "<p>" . t("Client Get.") . $content . "</p>";
   $output['content']['body']['#markup'] = $content;
 

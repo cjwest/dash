@@ -79,15 +79,17 @@ class DashBoardController extends \EntityAPIController {
     if (empty($ids)){
       $query = new DashEntityFieldQuery();
       $result = $query->execute();
+
       if (isset($result['node'])) {
         $ids = array_keys($result['node']);
         $dash_items = parent::load($ids, $conditions);
+// same result        $entities = entity_load_multiple_by_name('node', isset($ids) ? array($ids) : FALSE);
       }
     }
     else {
       $dash_items = parent::load($ids, $conditions);
     }
-    return $dash_items;
+   return $dash_items;
   }
 
 
