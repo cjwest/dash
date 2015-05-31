@@ -4,10 +4,11 @@
  * @author [cjwest] <[cjwest@acm.org]>
  */
 
-use Dash\DashClient;
+//use Dash\DashClient;
 use Dash\DashBoardController;
-use Dash\DashItem;
-require_once 'includes/entity.inc';
+//use Dash\DashItem;
+include_once 'includes/DashBoardController.php';
+//require_once 'includes/entity.inc';
 
 function dash_admin_config() {
   $output = array();
@@ -37,13 +38,15 @@ function dash_admin_config_connect() {
 //  $output['content']['dash_menu_block'] = $menu_block;
 
   // The settings form found in stanford_capx.forms.inc
-  //$form = drupal_get_form('dash_forms_connect_form');
+  //$form = drupal_get_form('dash_forms_connect_form')
   //$output['content']['config_form'] = $form;
 
 //  $dash_items = dash_getAllDashItems();
-  $dashboard_controller = new DashBoardController('node');
+
 //  $dash_item = new DashItem(array(), 'dashboard_item');
 //  $dash_items = DashBoardController::getAllDashItems();
+
+  $dashboard_controller = new DashBoardController('node');
   $dash_items = $dashboard_controller->load();
 
   $content = ' ';
@@ -54,9 +57,28 @@ function dash_admin_config_connect() {
      $content = $content . '<p>URL: ' . $item->field_dash_item_url['und']['0']['url'] . '</p>';
      $content = $content . '<p>User: ' . $item->field_dash_item_user['und']['0']['safe_value'] . '</p>';
      $content = $content . '<p>Password: ' . $item->field_dash_item_password['und']['0']['safe_value'] . '</p>';
+  }
 
+  $result =  pingdom_api_rest_request(
+    'POST',
+    'checks',
+    array(
+      'name' => 'Lightminder',
+      'type' => 'http',
+      'host' => 'www.lightminder.net',
+      'url' => '/contact'
+    )
+  );
 
-     $client = DashClient::factory(array(
+  dpm($result);
+
+  $content = "<p>" . t("Connecting the client.") . $content . "</p>";
+  $output['content']['body']['#markup'] = $content;
+
+  return $output;
+}
+
+  /*     $client = DashClient::factory(array(
       'base_url'        => $item->field_dash_item_url['und']['0']['url'],
       'consumer_key'    => $item->field_dash_item_user['und']['0']['safe_value'],
       'consumer_secret' => $item->field_dash_item_password['und']['0']['safe_value'],
@@ -83,9 +105,4 @@ function dash_admin_config_connect() {
         var_export($res->json());
       }
     }
-
-  $content = "<p>" . t("Client Get.") . $content . "</p>";
-  $output['content']['body']['#markup'] = $content;
-
-  return $output;
-}
+  */

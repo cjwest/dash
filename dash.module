@@ -7,12 +7,13 @@
 
 // Make sure this is loaded.
 
-require_once "includes/vendor/autoload.php";
-require_once "includes/autoload.php";
+//require_once "includes/vendor/autoload.php";
+//require_once "includes/autoload.php";
 
 include_once 'dash.features.inc';
 require_once "dash.pages.inc";
 
+require_once DRUPAL_ROOT . '/includes/entity.inc';
 /**
  * Implements hook_menu().
  */
@@ -37,6 +38,7 @@ function dash_menu() {
   return $items;
 }
 
+/*
 function dash_getAllDashItems() {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
@@ -52,3 +54,29 @@ function dash_getAllDashItems() {
   }
   return $dash_items;
 }
+
+
+function dash_getAllDashItems() {
+  $dash_items = array();
+  $query = new DashEntityFieldQuery();
+  $result = $query->execute();
+
+  if (isset($result['node'])) {
+    $dash_nids = array_keys($result['node']);
+    $dash_items = $query->load('node', $dash_nids);
+  }
+  return $dash_items;
+}
+
+
+class DashEntityFieldQuery extends EntityFieldQuery {
+  public function __construct() {
+    // now we don't need to define these over and over anymore
+    $this
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('status', NODE_PUBLISHED)
+      ->entityCondition('bundle', 'dashboard_item')
+      ->propertyOrderBy('created', 'DESC');
+  }
+}
+*/
