@@ -1,6 +1,6 @@
 #Dash
 
-Dash builds on some great work. This module provides an interface for administrators to monitor and act upon events.
+This module provides an interface for administrators to monitor and act upon events.
 
 ## What is Dash?
 
