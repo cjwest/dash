@@ -1,54 +1,179 @@
 <?php
+
 /**
  * @file
- * Code for Dash.
- * @author [cjwest]
+ * Web service client endpoint for invoking a RESTful service.
  */
 
-// Make sure this is loaded.
+/**
+ * Implements hook_wsclient_endpoint_types().
+ */
+function dash_wsclient_endpoint_types() {
+  return array(
+    'rest' => array(
+      'label' => t('REST'),
+      'class' => 'DashEndpoint',
+    ),
+  );
+}
 
-require_once "includes/vendor/autoload.php";
-require_once "includes/autoload.php";
+/**
+ * A remote endpoint type for invoking REST services.
+ */
+class DashEndpoint extends WSClientEndpoint {
 
-include_once 'dash.features.inc';
-require_once "dash.pages.inc";
+  /**
+   * @var HttpClient
+   */
+  protected $client;
+
+  public function __construct(WSClientServiceDescription $service) {
+    $this->service = $service;
+    $this->url = $service->url;
+  }
+
+  /**
+   * @return HttpClient
+   */
+  public function client() {
+    if (!isset($this->client)) {
+      if (isset($this->service->settings['formatter'])) {
+        $formatter = new $this->service->settings['formatter']();
+        $this->client = new HttpClient(NULL, $formatter);
+      }
+      else {
+        $this->client = new HttpClient(NULL, new HttpClientBaseFormatter(HttpClientBaseFormatter::FORMAT_JSON));
+      }
+      // Pass through additional curl options.
+      if (!empty($this->service->settings['curl options'])) {
+        $this->client->options['curlopts'] = $this->service->settings['curl options'];
+      }
+    }
+    return $this->client;
+  }
+
+  /**
+   * Calls the REST service.
+   *
+   * @param string $operation_name
+   *   The name of the operation to execute.
+   * @param array $arguments
+   *   Arguments to pass to the service with this operation.
+   */
+  public function call($operation_name, $arguments) {
+    $operation = $this->service->operations[$operation_name];
+    $operation_url = isset($operation['url']) ? $operation['url'] : '';
+    // Replace argument patterns in the operation URL.
+    foreach ($arguments as $key => $value) {
+      if (strpos($operation_url, '@' . $key) !== FALSE) {
+        $operation_url = str_replace('@' . $key, $value, $operation_url);
+        unset($arguments[$key]);
+      }
+    }
+    $client = $this->client();
+    $type = isset($operation['type']) ? $operation['type'] : 'GET';
+    $data = NULL;
+    if (isset($operation['data'])) {
+      $data = $arguments[$operation['data']];
+      unset($arguments[$operation['data']]);
+    }
+    try {
+      $response = $client->execute(new HttpClientRequest($this->service->url . $operation_url, array(
+        'method' => $type,
+        'parameters' => $arguments,
+        'data' => $data,
+      )));
+      return $response;
+    }
+    catch (HttpClientException $e) {
+      throw new WSClientException('Error invoking the REST service %name, operation %operation: %error', array('%name' => $this->service->label, '%operation' => $operation_name, '%error' => $e->getMessage()));
+    }
+  }
+
+  public function formAlter(&$form, &$form_state) {
+    if ($form_state['form'] == 'operation') {
+      $operation = $form_state['operation'];
+
+      $form['url'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Path'),
+        '#default_value' => isset($operation['url']) ? $operation['url'] : '',
+        '#description' => t('The path to append to the services base URL. In order to construct the path using parameter values make use of replacements in the form "@parameter-name". E.g. the path "node/@nid" together with a "nid" parameter could be used to construct the path to a Drupal node.'),
+        '#weight' => -5,
+      );
+      $form['#submit'][] = 'dash_operation_form_submit';
+    }
+  }
+
+}
+
+/**
+ * Form submit callback for the operation form.
+ */
+function dash_operation_form_submit($form, &$form_state) {
+  $form_state['operation']['url'] = $form_state['values']['url'];
+}
 
 /**
  * Implements hook_menu().
  */
 function dash_menu() {
-
-  // Overview page.
-  $items['admin/config/dash'] = array(
-    'title' => 'Dashboard',
-    'page callback' => 'dash_admin_config',
-    'access arguments' => array('administer dash'),
+  $items['admin/config/services/dash'] = array(
+    'title' => 'Configure Dash',
     'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('dash_config_form'),
+    'access arguments' => array('administer dash configuration'),
+  );
+  $items['admin/config/services/dash/dashboard-refresh'] = array(
+    'title' => 'Refresh Dashboard Information',
+    'type' => MENU_CALLBACK,
+    'page callback' => '_dash_refresh',
+    'access arguments' =>  array('get dashboard information'),
   );
 
-  // Connect page.
-  $items['admin/config/dash/connect'] = array(
-    'title' => 'Connect',
-    'page callback' => 'dash_admin_config_connect',
-    'access arguments' => array('administer dash'),
-    'type' => MENU_NORMAL_ITEM,
-    'weight' => -10,
-  );
   return $items;
+
 }
 
-function dash_getAllDashItems() {
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'dashboard_item')
-    ->propertyCondition('status', NODE_PUBLISHED);
-
-  $result = $query->execute();
-
-
-  if (isset($result['node'])) {
-    $dash_nids = array_keys($result['node']);
-    $dash_items = entity_load('node', $dash_nids);
-  }
-  return $dash_items;
+/**
+ * Wrapper function for refresh menu callback.
+ */
+function _dash_refresh() {
+  dash_update();
+  drupal_set_message(t("Updated dashboard information."));
+  drupal_goto('admin/config/services/dash');
 }
+
+/**
+ * Update the display
+ */
+function dash_update(){
+
+  watchdog('dash', t("Updated site information."));
+}
+
+
+
+/**
+ * Configuration form.
+ */
+function dash_config_form($form, &$form_state) {
+  $form['authentication'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Dash Authentication'),
+    '#description' => t('Enter your Dash credentials. '),
+  );
+  $form['authentication']['dash_username'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Dash User Name'),
+    '#default_value' => variable_get('dash_username'),
+  );
+  $form['authentication']['dash_pass'] = array(
+    '#type' => 'password',
+    '#title' => t('Password'),
+    '#default_value' => variable_get('dash_pass'),
+  );
+  return system_settings_form($form);
+}
+
