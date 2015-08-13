@@ -125,7 +125,7 @@ function dash_menu() {
     'page arguments' => array('dash_config_form'),
     'access arguments' => array('administer dash configuration'),
   );
-  $items['admin/config/services/dash/dashboard-refresh'] = array(
+  $items['admin/config/services/dash/refresh'] = array(
     'title' => 'Refresh Dashboard Information',
     'type' => MENU_CALLBACK,
     'page callback' => '_dash_refresh',
