@@ -106,6 +106,6 @@ class DashAgentController extends EntityAPIController {
 
 class DashAgent extends Entity {
   protected function defaultUri() {
-    return array('path' => 'task/' . $this->identifier());
+    return array('path' => 'dash_agent/' . $this->identifier());
   }
 }
