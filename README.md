@@ -8,6 +8,9 @@ A dashboard for monitoring and controlling REST based systems.
 
 ## Installation
 
+### Install Guzzle.
+Install Guzzle in the /includes directory for the Dash module.
+To use Composer to install Guzzle, visit http://guzzle.readthedocs.org/en/latest/overview.html#installation
 Install this module like any other Drupal module then visit (NEEDS URL TO CONFIG PAGE).
 
 ## Authentication

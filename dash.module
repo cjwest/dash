@@ -35,7 +35,7 @@ function dash_menu() {
 function _dash_refresh() {
   dash_update();
   drupal_set_message(t("Updated dashboard information."));
-  drupal_goto('admin/config/services/dash');
+  //drupal_goto('admin/config/services/dash');
 }
 
 
