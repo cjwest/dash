@@ -11,14 +11,14 @@ require_once "dash.services.php";
  * Implements hook_menu().
  */
 function dash_menu() {
-  $items['admin/config/services/dash'] = array(
+  $items['admin/config/dash'] = array(
     'title' => 'Configure Dash',
     'type' => MENU_NORMAL_ITEM,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('dash_config_form'),
     'access arguments' => array('administer dash configuration'),
   );
-  $items['admin/config/services/dash/refresh'] = array(
+  $items['admin/config/dash/refresh'] = array(
     'title' => 'Refresh Dashboard Information',
     'type' => MENU_CALLBACK,
     'page callback' => '_dash_refresh',
