@@ -1,5 +1,4 @@
 name = dash
 description = Dash.
-package = Services
+package = Dash
 core = 7.x
-dependencies[] = wsclient_rest
