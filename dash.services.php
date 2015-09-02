@@ -50,7 +50,7 @@ var_dump($result);
  * Implements hook_entity_info().
  */
 function dash_entity_info() {
-  return _dash_agent_entity_info();
+  return _dash_tas_agent_entity_info();
 }
 
 /**
@@ -60,12 +60,12 @@ function dash_entity_info() {
  *
  *
  */
-function _dash_agent_entity_info() {
+function _dash_tas_agent_entity_info() {
   $return = array(
-    'dash_agent' => array(
-      'label' => t('Dash Agent'),
+    'tas_agent' => array(
+      'label' => t('TAS Agent'),
       'controller class' => 'DashAgentController',
-      'base table' => null,
+      'base table' => 'tas_agent',
       'uri callback' => 'dash_agent_uri',
       'fieldable' => TRUE,
       'entity keys' => array(
