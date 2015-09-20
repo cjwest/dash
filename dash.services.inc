@@ -4,8 +4,20 @@
  * Contains services for dash
  */
 
+
 require_once "includes/vendor/autoload.php";
 use GuzzleHttp\Client;
+
+
+/**
+ * Wrapper function for refresh menu callback.
+ */
+function dash_refresh() {
+  dash_update();
+  drupal_set_message(t("Updated dashboard information."));
+  //drupal_goto('admin/config/services/dash');
+}
+
 /**
  * Update the display
  */
@@ -46,12 +58,7 @@ var_dump($result);
   watchdog('dash', t("Finished updating dash information."));
 }
 
-/**
- * Implements hook_entity_info().
- */
-function dash_entity_info() {
-  return _dash_tas_agent_entity_info();
-}
+
 
 /**
  * Create the agent entity
@@ -60,12 +67,13 @@ function dash_entity_info() {
  *
  *
  */
-function _dash_tas_agent_entity_info() {
+/*
+function dash_tas_agent_entity_info() {
   $return = array(
-    'tas_agent' => array(
-      'label' => t('TAS Agent'),
+    'agent' => array(
+      'label' => t('Agent'),
       'controller class' => 'DashAgentController',
-      'base table' => 'tas_agent',
+      'base table' => 'agent',
       'uri callback' => 'dash_agent_uri',
       'fieldable' => TRUE,
       'entity keys' => array(
@@ -92,9 +100,11 @@ function _dash_tas_agent_entity_info() {
 
   return $return;
 }
+*
 /**
  * Entity uri callback: points to a unique URI.
  */
+/*
 function dash_agent_uri($entity){
   return array('path' => 'dash_agent/' . $entity->identifier());
 }
@@ -109,3 +119,4 @@ class DashAgent extends Entity {
     return array('path' => 'dash_agent/' . $this->identifier());
   }
 }
+*/

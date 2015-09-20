@@ -9,68 +9,64 @@
  *
  * dash_agent:
  * array (size=6)
-'id_agente' => string '1' (length=1)
-'nombre' => string 'tas' (length=3)
-'direccion' => string 'localhost' (length=9)
-'comentarios' => string 'TAS&#x20;Demo&#x20;Server&#x20;' (length=31)
-'name' => string 'Linux' (length=5)
-'url_address' => null
  */
+/*
 function dash_schema() {
-  $schema['tas_agent'] = array(
-    'description' => 'Base table for a TAS agent',
-    'fields' => array(
-      'nid' => array(
-        'description' => 'Primary identifier',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      /*
-      'agent_id' => array(
-        'description' => 'Agent ID (id_agente).',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      ),
-      'title' => array(
-        'description' => 'The title of this agent (nombre).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'uri'=> array(
-        'description' => 'The URI of this agent (direccion).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'description'=> array(
-        'description' => 'The notes or description of this agent (comentarios).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'type'=> array(
-        'description' => 'The type of resource this agent represents (name).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'url_address'=> array(
-        'description' => 'The url of this agent (url_address).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      */
+$schema['agent'] = array(
+'description' => 'Base table for an agent',
+'fields' => array(
+'nid' => array(
+  'description' => 'Primary identifier',
+  'type' => 'serial',
+  'unsigned' => TRUE,
+  'not null' => TRUE,
+),
+
+'agent_id' => array(
+  'description' => 'Agent ID (id_agente).',
+  'type' => 'int',
+  'unsigned' => TRUE,
+  'not null' => FALSE,
+),
+'title' => array(
+  'description' => 'The title of this agent (nombre).',
+  'type' => 'varchar',
+  'length' => 255,
+  'not null' => TRUE,
+  'default' => '',
+),
+'uri'=> array(
+  'description' => 'The URI of this agent (direccion).',
+  'type' => 'varchar',
+  'length' => 255,
+  'not null' => TRUE,
+  'default' => '',
+),
+'description'=> array(
+  'description' => 'The notes or description of this agent (comentarios).',
+  'type' => 'varchar',
+  'length' => 255,
+  'not null' => TRUE,
+  'default' => '',
+),
+'type'=> array(
+  'description' => 'The type of resource this agent represents (name).',
+  'type' => 'varchar',
+  'length' => 255,
+  'not null' => TRUE,
+  'default' => '',
+),
+'url_address'=> array(
+  'description' => 'The url of this agent (url_address).',
+  'type' => 'varchar',
+  'length' => 255,
+  'not null' => TRUE,
+  'default' => '',
+),
+
     ),
   );
 
   return $schema;
 }
+*/
