@@ -12,14 +12,14 @@ module_load_include('inc', 'dash', 'dash.services');
  * Implements hook_menu().
  */
 function dash_menu() {
-  $items['admin/config/dash'] = array(
+  $items['admin/dash'] = array(
     'title' => 'Configure Dash',
     'type' => MENU_NORMAL_ITEM,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('dash_config_form'),
     'access arguments' => array('administer dash configuration'),
   );
-  $items['admin/config/dash/refresh'] = array(
+  $items['admin/dash/refresh'] = array(
     'title' => 'Refresh Dashboard Information',
     'type' => MENU_CALLBACK,
     'page callback' => 'dash_refresh',
@@ -28,12 +28,6 @@ function dash_menu() {
 
   return $items;
 
-}
-/**
- * Implements hook_entity_info().
- */
-function dash_entity_info() {
-//  return dash_tas_agent_entity_info();
 }
 
 

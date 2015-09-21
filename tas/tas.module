@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @file
+ * Dashboard functionality with Guzzle.
+ */
+
+//require_once "tas.services.inc";
+module_load_include('inc', 'tas', 'tas.services');
+
+/**
+ * Implements hook_menu().
+ */
+function tas_menu() {
+  $items['admin/dash/tas'] = array(
+    'title' => 'Configure TAS',
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('tas_config_form'),
+    'access arguments' => array('administer TAS configuration'),
+  );
+  $items['admin/dash/tas/refresh'] = array(
+    'title' => 'Refresh TAS Information',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'tas_refresh',
+    'access arguments' =>  array('get TAS information'),
+  );
+  return $items;
+
+}
+
+
+/**
+ * Configuration form.
+ */
+function tas_config_form($form, &$form_state) {
+
+  // Get the previous settings
+  $settings = tas_get_settings();
+
+  $form['config'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('TAS Authentication'),
+    '#description' => t('Enter your TAS credentials.'),
+  );
+  $form['config']['tas_username'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Tas User Name'),
+    '#default_value' => $settings['tas_username'],
+    '#required' => TRUE,
+  );
+  $form['config']['tas_pass'] = array(
+    '#type' => 'password',
+    '#title' => t('Password'),
+    '#default_value' => $settings['tas_pass'],
+    '#required' => TRUE,
+  );
+  $form['config']['tas_apipass'] = array(
+    '#type' => 'password',
+    '#title' => t('API Password'),
+    '#default_value' => $settings['tas_apipass'],
+    '#required' => TRUE,
+  );
+
+  // and submit the form.
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  return $form;
+
+}
+
+
+
+/**
+ * Default settings wrapper for variable_get
+ * @return [array] $settings [Persistent settings for TAS]
+ */
+function tas_get_settings() {
+  $default_settings = array(
+    'tas_pass' => '',
+    'tas_username' => '',
+    'tas_apipass' => ''
+  );
+  $settings = variable_get('tas_settings', $default_settings );
+
+  return $settings;
+}
+
+/**
+ * [tas_settings_form_submit description]
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function tas_config_form_submit($form, &$form_state) {
+  $values = $form_state['values'];
+  $settings = tas_get_settings();
+  $new_settings = array_merge($settings, $values);
+
+  $new_settings['tas_pass'] = encrypt($new_settings['tas_pass']);
+  $new_settings['tas_apipass'] = encrypt($new_settings['tas_apipass']);
+
+  variable_set('tas_settings', $new_settings);
+
+  drupal_set_message('Your settings have been saved.');
+}

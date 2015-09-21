@@ -8,6 +8,17 @@
 require_once "includes/vendor/autoload.php";
 use GuzzleHttp\Client;
 
+/**
+ * Get a client
+ * @return Client
+ */
+function dash_get_client(){
+  // Todo make this more efficient
+  return new Client([
+      'base_uri' => 'https://demo.theftalertsystem.com:8443/tas_console/include/api.php',
+    ]
+  );
+}
 
 /**
  * Wrapper function for refresh menu callback.
@@ -25,32 +36,44 @@ function dash_update(){
 
   watchdog('dash', t("Begin updating dash information."));
 
-echo "Updating Dash information";
+  echo "Updating Dash information";
+  $client = dash_get_client();
 
-$client = new Client([
-    'base_uri' => 'https://demo.theftalertsystem.com:8443/tas_console/include/api.php',
-  ]
-);
-
-  // Todo: put in exception handling
-$response = $client->get('?info=version');
-
-var_dump($response);
-$content = '';
-
-$content = $content . "<p>Status Code: " . $response->getStatusCode() . '</p>';
-$content = $content . '<p>Header: ' . $response->getHeader('content-type') . '</p>';
-$content = $content . '<p>Body: ' . $response->getBody() . '</p>';
-
-  $result = dash_get_all_agents($client);
-
+  $result = dash_get_version($client);
   var_dump($result);
 
-  echo $content;
+  $result = dash_get_all_agents($client);
+  var_dump($result);
+
 
   watchdog('dash', t("Finished updating dash information."));
 }
 
+/**
+ * Get the version information
+ * @param $client
+ * @return mixed|string
+ */
+function dash_get_version($client) {
+  $result = array();
+
+  // Todo: put in exception handling
+  $response = $client->get('?info=version');
+  $status_code =  $response->getStatusCode();
+  if ($status_code != 200){
+    watchdog('dash', t('Unable to get info. Status code: ' . $status_code), WATCHDOG_WARNING);
+  }
+  else {
+    return $response;
+  }
+  return $result;
+}
+
+/**
+ * Get all the agents and return them in an array of agent entities.
+ * @param $client
+ * @return array
+ */
 function dash_get_all_agents($client) {
   $agents = array();
 
@@ -64,10 +87,6 @@ function dash_get_all_agents($client) {
   }
   else {
     $result = json_decode($response->getBody(), true);
-
-    var_dump($result);
-
-
     foreach ($result['data'] as $key => $value) {
       if ($result['data'][$key]['nombre'] == null || $result['data'][$key]['nombre'] == '')
       {
@@ -87,9 +106,7 @@ function dash_get_all_agents($client) {
         $agents[$key] = entity_create('node', $entity_property_value_array);
         //$agents[$key]->save();
       }
-
     }
-
   }
   return $agents;
 }

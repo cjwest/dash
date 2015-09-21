@@ -1,0 +1,21 @@
+<?php
+/**
+ * Install tasks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function tas_install() {
+
+  // Let's keep the default settings defined in only one place
+  $settings = tas_get_settings();
+  variable_set('tas_settings', $settings);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function tas_uninstall() {
+  variable_del('tas_settings');
+}
