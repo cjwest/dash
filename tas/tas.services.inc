@@ -115,6 +115,85 @@ function tas_get_all_agents($client) {
 }
 
 /**
+ * Get all the agents and their associated info.
+ * @param $client
+ * @return array
+ */
+function tas_get_all($client) {
+  $agents = array();
+  $settings = tas_get_settings();
+
+  echo '*** Get all ***';
+  $response = $client->get(
+    '?op=get&op2=extension&ext_name=force_alerts&ext_function=bogus_group_tree&return_type=json&other_mode=url_encode_separator_|&apipass=5875&user=rmt_ctl&pass=8765');
+  // '?op=get&op2=extension&ext_name=force_alerts&ext_function=bogus_group_tree&return_type=json&other_mode=url_encode_separator_|&apipass=5875&user=demo&pass=Dem04u! ');
+
+
+  $content = $content . "<p>Status Code: " . $response->getStatusCode() . '</p>';
+  $content = $content . '<p>Header: ' . $response->getHeader('content-type') . '</p>';
+  $content = $content . '<p>Body: ' . $response->getBody() . '</p>';
+  echo $content;
+
+  echo '*** decoding Json ***';
+  $result = json_decode($response->getBody(), true);
+
+  var_dump($result);
+
+  // Todo: put in exception handling
+//  $response = $client->get(
+//   '?op=get&op2=extension&ext_name=force_alerts&ext_function=bogus_group_tree&return_type=json&other_mode=url_encode_separator_|'
+//    . '&apipass=5875&user=rmt_ctl&pass=8765');
+
+//    '?op=get&op2=extension&ext_name=force_alerts&ext_function=bogus_group_tree&return_type=json&other_mode=url_encode_separator_|'
+//    . '&apipass=' . decrypt($settings['tas_apipass']) . '&user=' . $settings['tas_username'] . '&pass=' . decrypt($settings['tas_pass']));
+
+//https://demo.theftalertsystem.com:8443/tas_console/include/api.php?op=get&op2=extension&ext_name=force_al erts&ext_function=bogus_group_tree&return_type=json&other_mode=url_encode_separator_|&apipass=5875&user=demo&pass=Dem0 4u!
+   /*
+  $status_code =  $response->getStatusCode();
+  if ($status_code != 200){
+    watchdog('tas', t('Unable to import. Status code: ' . $status_code), WATCHDOG_WARNING);
+  }
+  else {
+    var_dump($response);
+    $result = json_decode($response->getBody(), true);
+
+    var_dump($result);
+
+
+
+    $result = json_decode($response->getBody(), true);
+    if (!empty ($result)) {
+      foreach ($result['data'] as $key => $value) {
+        if ($result['data'][$key]['nombre'] == null || $result['data'][$key]['nombre'] == '')
+        {
+          watchdog('tas', t('No nombre or title for imported item: ' . $key), WATCHDOG_NOTICE);
+        }
+        else
+        {
+
+          $entity_property_value_array = array();
+          $entity_property_value_array['type'] = 'tas_agent';
+          $entity_property_value_array['title'] = $result['data'][$key]['nombre'];
+          $entity_property_value_array['body'] = $result['data'][$key]['comentarios'];
+          $entity_property_value_array['field_tas_agent_id'] = $result['data'][$key]['id_agente'];
+          $entity_property_value_array['field_tas_uri'] = $result['data'][$key]['direccion'];
+          $entity_property_value_array['field_tas_name'] = $result['data'][$key]['name'];
+          $entity_property_value_array['field_tas_url_address'] = $result['data'][$key]['url_address'];
+
+          $agents[$key] = entity_create('node', $entity_property_value_array);
+          //$agents[$key]->save();
+
+        }
+      }
+
+    }
+
+  }
+       */
+  return $agents;
+}
+
+/**
  * Create the agent entity
  * Note: I'm breaking this out since I anticipate more entities
  * @return array
@@ -174,3 +253,4 @@ class TasAgent extends Entity {
   }
 }
 */
+
