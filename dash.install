@@ -1,6 +1,21 @@
 <?php
 /**
  * @file
+ * Install, update, and uninstall functions for the pingdom_api module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function dash_uninstall() {
+//  variable_del('pingdom_api_check_list');
+//  variable_del('pingdom_api_username');
+//  variable_del('pingdom_api_pass');
+//  variable_del('pingdom_api_appkey');
+}
+
+/**
+ * @file
  * Schema definitions.
  */
 

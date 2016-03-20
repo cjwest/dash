@@ -4,8 +4,8 @@
  * Contains services for dash
  */
 
-
-require_once "includes/vendor/autoload.php";
+require_once("./" . drupal_get_path('module','dash') . "/includes/vendor/autoload.php");
+//require_once "includes/vendor/autoload.php";
 use GuzzleHttp\Client;
 
 /**
