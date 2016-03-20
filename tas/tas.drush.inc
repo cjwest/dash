@@ -18,14 +18,14 @@ function tas_drush_command() {
     'aliases' => array('tas'),
     'options' => array(
       'agents' => 'Display TAS agents.',
-      'info' => 'Display TAS agents and info.',
+      'force-alert' => 'Forces a TAS alert.',
     ),
 
     'examples' => array(
       'drush tas help' => 'Displays help information.',
       'drush tas' => 'Displays TAS version information.',
       'drush tas --agents' => 'Displays TAS agents.',
-      'drush tas --info' => 'Displays TAS agents and info.',
+      'drush tas --force-alert' => 'Forces a TAS alert.',
     ),
   );
 
@@ -38,21 +38,26 @@ function drush_tas($type = FALSE) {
   $client = tas_get_client();
 
   // Options
-  $agents = strtolower(drush_get_option('agents'));
-  if (!empty($agents)) {
+  $option = strtolower(drush_get_option('agents'));
+  if (!empty($option)) {
     $result = tas_get_all_agents($client);
     var_dump($result);
     drush_log(dt("Retrieved TAS agents."), "ok");
   }
 
-  $all = strtolower(drush_get_option('info'));
-  if (!empty($all)) {
-    $result = tas_get_all($client);
+  $option = strtolower(drush_get_option('force-alert'));
+  if (!empty($option)) {
+    $result = tas_force_alert($client);
     var_dump($result);
-    drush_log(dt("Retrieved TAS agents and info."), "ok");
+    if (!empty($result)) {
+      drush_log(dt("Forced alert."), "ok");
+    }
+    else {
+      drush_log(dt("Forced alert unsuccessful."), "ok");
+    }
   }
 
-  if (!$agents && !$all) {
+  if (!$option) {
     $result = tas_get_version($client);
     var_dump($result);
     drush_log(dt("Retrieved TAS version information."), "ok");
