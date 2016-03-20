@@ -95,19 +95,27 @@ function tas_update_nodes($list = array()){
   }
 }
 */
+/**
+ * Give an JSON array of agents, create if necessary or update the corresponding nodes.
+ * @return list of nodes
+ */
 function tas_update_nodes($list = array()){
+  $nodes = array();
+  $count = 0;
   if (!empty ($list)) {
     foreach ($list['data'] as $key => $value) {
-      if ($list['data'][$key]['nombre'] == null || $list['data'][$key]['nombre'] == '')
+      if ($value['id_agente'] == null || $value['id_agente'] == '')
       {
-        watchdog('tas', t('No nombre or title for imported item: ' . $key), WATCHDOG_NOTICE);
+        watchdog('tas', t('No id_agente for the imported item: @key', array('@key' => $key)), WATCHDOG_NOTICE);
       }
       else
       {
-        $node = tas_update_node($list['data'][$key]);
+        $nodes[$count] = tas_update_node($value);
+        $count++;
       }
     }
   }
+  return $nodes;
 }
 
 function tas_update_node($data){
@@ -125,34 +133,30 @@ function tas_update_node($data){
   if(!isset($result['node'])) {
     $entity_property_value_array = array();
     $entity_property_value_array['type'] = 'tas_agent';
-    $entity_property_value_array['title'] = $data['nombre'];
-    $entity_property_value_array['body'] = $data['comentarios'];
-    $entity_property_value_array['field_tas_agent_id'] = $data['id_agente'];
-    $entity_property_value_array['field_tas_uri'] = $data['direccion'];
-    $entity_property_value_array['field_tas_name'] = $data['name'];
-    $entity_property_value_array['field_tas_url_address'] = $data['url_address'];
-
     $node = entity_create('node', $entity_property_value_array);
   }
-  // Time for an update
+
+  // Time for an update.
   else {
-    // Check that there's one node with the given id
+    // Warn if there's more than one node with the given id
     if(count($result['node']) > 1) {
-      watchdog('tas', t('Warning: ' . count($result['node']) . ' entities with agent_id: ' . $id), WATCHDOG_WARNING);
+      watchdog('tas', t('Warning: @count entities with agent_id: @id',
+        array('@count' => $count($result['node']), '@id' => $id)), WATCHDOG_WARNING);
       // Well, carry on but grab the first node.
       reset($result['node']);
     }
     $nid = key($result['node']);
-    $node = node_load($nid);
-    $node['type'] = 'tas_agent';
-    $node['title'] = $data['nombre'];
-    $node['body'] = $data['comentarios'];
-    $node['field_tas_agent_id'] = $data['id_agente'];
-    $node['field_tas_uri'] = $data['direccion'];
-    $node['field_tas_name'] = $data['name'];
-    $node['field_tas_url_address'] = $data['url_address'];
+    $node = entity_load_single('node', $nid);
   }
-  return node_save($node);
+
+  $wrapper = entity_metadata_wrapper('node', $node);
+  $wrapper->title = $data['nombre'];
+  $wrapper->body->set(array('value' => $data['comentarios']));
+  $wrapper->field_tas_agent_id = $data['id_agente'];
+  $wrapper->field_tas_uri = $data['direccion'];
+  $wrapper->field_tas_name = $data['name'];
+  $wrapper->field_tas_url_address = $data['url_address'];
+  return $wrapper->save();
 }
 
 /**
@@ -187,11 +191,14 @@ function tas_get_all_agents($client) {
   // Todo: put in exception handling
   $response = $client->get(
     '?op=get&op2=all_agents&return_type=json&other_mode=url_encode_separator_|'
-    . '&apipass=' . decrypt($settings['tas_apipass']) . '&user=' . $settings['tas_username'] . '&pass=' . decrypt($settings['tas_pass']));
+    . '&apipass=' . decrypt($settings['tas_apipass'])
+    . '&user=' . $settings['tas_username']
+    . '&pass=' . decrypt($settings['tas_pass']));
 
   $status_code =  $response->getStatusCode();
   if ($status_code != 200){
-    watchdog('tas', t('Unable to import agents. Status code: ' . $status_code), WATCHDOG_WARNING);
+    watchdog('tas', t('Unable to import agents. Status code: @status_code',
+      array('@status_code' => $status_code)), WATCHDOG_WARNING);
   }
   else {
     return json_decode($response->getBody(), true);
