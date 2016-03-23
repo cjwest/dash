@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the TAS Agent Administration feature.
+ */
+
+include_once 'tas_agent_administration.features.inc';
