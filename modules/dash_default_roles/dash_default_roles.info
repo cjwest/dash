@@ -1,0 +1,12 @@
+name = Dash Default Roles
+description = Default roles for Dash
+core = 7.x
+package = Dash
+version = 7.x-1.0
+project = dash_default_roles
+dependencies[] = features
+features[features_api][] = api:2
+features[user_role][] = ATI
+features[user_role][] = ATI Administrator
+project path = sites/all/modules/custom/dash/modules
+project status url = https://github.com/cjwest/dash
