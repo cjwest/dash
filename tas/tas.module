@@ -25,6 +25,14 @@ function tas_menu() {
     'page callback' => 'tas_refresh',
     'access arguments' =>  array('get TAS information'),
   );
+  $items['admin/dash/tas/action/%/%'] = array(
+    'title' => 'Send an action back to TAS',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'tas_action',
+    'page arguments' => array(4, 5),
+    'access arguments' =>  array('send TAS action'),
+  );
+
   return $items;
 
 }

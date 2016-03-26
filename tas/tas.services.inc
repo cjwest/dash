@@ -159,6 +159,7 @@ function tas_get_all_agents($client) {
  */
 function tas_decode_response($response) {
 
+  $content = '';
   $content = $content . "<p>Status Code: " . $response->getStatusCode() . '</p>';
   $content = $content . '<p>Header: ' . $response->getHeader('content-type') . '</p>';
   $content = $content . '<p>Body: ' . $response->getBody() . '</p>';
@@ -193,4 +194,16 @@ function tas_force_alert($client) {
   }
 }
 
+/**
+ * Wrapper function for action menu callback.
+ */
+function tas_action($agent, $action) {
+  $action = tas_build_action($agent, $action);
+  echo $action;
+  drupal_set_message(t("Sent TAS action: @action",  array('@action' => $action)));
+  drupal_goto('admin/dash/tas'); // should go to a page displaying the agents instead...
+}
 
+function tas_build_action($agent, $action) {
+  return $agent . ' ' . $action;
+}
