@@ -10,7 +10,7 @@
 function tas_agent_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-tas_agent-body'
+  // Exported field_instance: 'node-tas_agent-body'.
   $field_instances['node-tas_agent-body'] = array(
     'bundle' => 'tas_agent',
     'default_value' => NULL,
@@ -81,7 +81,7 @@ function tas_agent_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-tas_agent-field_tas_agent_id'
+  // Exported field_instance: 'node-tas_agent-field_tas_agent_id'.
   $field_instances['node-tas_agent-field_tas_agent_id'] = array(
     'bundle' => 'tas_agent',
     'default_value' => NULL,
@@ -147,7 +147,47 @@ function tas_agent_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-tas_agent-field_tas_name'
+  // Exported field_instance: 'node-tas_agent-field_tas_group'.
+  $field_instances['node-tas_agent-field_tas_group'] = array(
+    'bundle' => 'tas_agent',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tas_group',
+    'label' => 'Group',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 47,
+    ),
+  );
+
+  // Exported field_instance: 'node-tas_agent-field_tas_name'.
   $field_instances['node-tas_agent-field_tas_name'] = array(
     'bundle' => 'tas_agent',
     'default_value' => NULL,
@@ -213,7 +253,47 @@ function tas_agent_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-tas_agent-field_tas_uri'
+  // Exported field_instance: 'node-tas_agent-field_tas_status'.
+  $field_instances['node-tas_agent-field_tas_status'] = array(
+    'bundle' => 'tas_agent',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tas_status',
+    'label' => 'Status',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 48,
+    ),
+  );
+
+  // Exported field_instance: 'node-tas_agent-field_tas_uri'.
   $field_instances['node-tas_agent-field_tas_uri'] = array(
     'bundle' => 'tas_agent',
     'default_value' => NULL,
@@ -279,7 +359,7 @@ function tas_agent_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-tas_agent-field_tas_url_address'
+  // Exported field_instance: 'node-tas_agent-field_tas_url_address'.
   $field_instances['node-tas_agent-field_tas_url_address'] = array(
     'bundle' => 'tas_agent',
     'default_value' => NULL,
@@ -349,8 +429,10 @@ function tas_agent_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Agent ID');
   t('Agent ID (id_agente).');
+  t('Group');
   t('Name');
   t('Notes');
+  t('Status');
   t('The URI of this agent (direccion).');
   t('The name or type of resource this agent represents (name).');
   t('The notes or description of this agent (comentarios).');
