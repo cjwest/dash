@@ -9,10 +9,10 @@
  */
 function tas_agent_taxonomy_default_vocabularies() {
   return array(
-    'tas_agent_group' => array(
-      'name' => 'TAS Agent Group',
-      'machine_name' => 'tas_agent_group',
-      'description' => 'Vocabulary for grouping for TAS agents',
+    'bats_status' => array(
+      'name' => 'BATS status',
+      'machine_name' => 'bats_status',
+      'description' => '',
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
@@ -32,10 +32,10 @@ function tas_agent_taxonomy_default_vocabularies() {
         ),
       ),
     ),
-    'tas_agent_status' => array(
-      'name' => 'TAS Agent Status',
-      'machine_name' => 'tas_agent_status',
-      'description' => 'Vocabulary to identify TAS agent status',
+    'tas' => array(
+      'name' => 'TAS Group',
+      'machine_name' => 'tas',
+      'description' => '',
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,

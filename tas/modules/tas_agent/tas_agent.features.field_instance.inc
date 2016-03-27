@@ -159,7 +159,7 @@ function tas_agent_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -176,14 +176,54 @@ function tas_agent_field_default_field_instances() {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 1,
+      'active' => 0,
+      'module' => 'options',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'options_buttons',
+      'weight' => 49,
+    ),
+  );
+
+  // Exported field_instance: 'node-tas_agent-field_tas_local_activation'.
+  $field_instances['node-tas_agent-field_tas_local_activation'] = array(
+    'bundle' => 'tas_agent',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 8,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tas_local_activation',
+    'label' => 'Local Activation',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
       'module' => 'taxonomy',
       'settings' => array(
         'autocomplete_path' => 'taxonomy/autocomplete',
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 47,
+      'weight' => 50,
     ),
   );
 
@@ -250,46 +290,6 @@ function tas_agent_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 45,
-    ),
-  );
-
-  // Exported field_instance: 'node-tas_agent-field_tas_status'.
-  $field_instances['node-tas_agent-field_tas_status'] = array(
-    'bundle' => 'tas_agent',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 7,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_tas_status',
-    'label' => 'Status',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 48,
     ),
   );
 
@@ -425,20 +425,61 @@ function tas_agent_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-tas_agent-field_tas_users'.
+  $field_instances['node-tas_agent-field_tas_users'] = array(
+    'bundle' => 'tas_agent',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'This references the users that are associated with this agent.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tas_users',
+    'label' => 'Users',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 47,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Agent ID');
   t('Agent ID (id_agente).');
   t('Group');
+  t('Local Activation');
   t('Name');
   t('Notes');
-  t('Status');
   t('The URI of this agent (direccion).');
   t('The name or type of resource this agent represents (name).');
   t('The notes or description of this agent (comentarios).');
   t('The url of this agent (url_address).');
+  t('This references the users that are associated with this agent.');
   t('URI');
   t('URL Address');
+  t('Users');
 
   return $field_instances;
 }
