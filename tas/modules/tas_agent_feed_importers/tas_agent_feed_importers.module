@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the TAS Agent Feed Importers feature.
+ */
+
+include_once 'tas_agent_feed_importers.features.inc';

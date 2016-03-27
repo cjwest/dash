@@ -1,0 +1,14 @@
+name = TAS Agent Feed Importers
+core = 7.x
+package = TAS
+version = 7.x-1.0-dev
+project = tas_agent_feed_importers
+dependencies[] = ctools
+dependencies[] = feeds
+dependencies[] = tas_agent
+features[ctools][] = feeds:feeds_importer_default:1
+features[features_api][] = api:2
+features[feeds_importer][] = bats_agent_importer
+features[feeds_importer][] = bats_group_importer
+project path = sites/all/modules/custom/dash/tas/modules
+project status url = https://github.com/cjwest/dash.git
