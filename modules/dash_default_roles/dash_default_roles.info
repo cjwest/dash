@@ -8,5 +8,4 @@ dependencies[] = features
 features[features_api][] = api:2
 features[user_role][] = ATI
 features[user_role][] = ATI Administrator
-project path = sites/all/modules/custom/dash/modules
 project status url = https://github.com/cjwest/dash
